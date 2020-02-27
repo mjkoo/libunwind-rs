@@ -7,6 +7,7 @@
 extern crate num_derive;
 
 use libunwind_sys::*;
+use std::error;
 use std::fmt; 
 use std::ffi::CStr;
 use foreign_types::{foreign_type, ForeignType};
@@ -51,6 +52,12 @@ impl fmt::Display for Error {
             let e = CStr::from_ptr(unw_strerror(self.clone() as i32));
             write!(f,"{}", e.to_string_lossy())
         }
+    }
+}
+
+impl error::Error for Error {
+    fn source(&self) -> Option<&(dyn error::Error + 'static)> {
+        None
     }
 }
 
